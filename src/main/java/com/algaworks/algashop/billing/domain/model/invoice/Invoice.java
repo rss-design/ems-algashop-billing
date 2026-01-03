@@ -1,7 +1,9 @@
 package com.algaworks.algashop.billing.domain.model.invoice;
 
+import com.algaworks.algashop.billing.domain.model.IdGenerator;
 import java.util.Collections;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
@@ -17,6 +19,7 @@ import lombok.Setter;
 @Setter(AccessLevel.PRIVATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Invoice {
 
     @EqualsAndHashCode.Include
@@ -41,6 +44,29 @@ public class Invoice {
 
     private String cancelReason;
 
+    public static Invoice issue(String orderId, UUID customerId, Payer payer, Set<LineItem> items) {
+
+        BigDecimal totalAmount = items.stream()
+            .map(LineItem::getAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new Invoice(
+            IdGenerator.generateTimeBasedUUID(),
+            orderId,
+            customerId,
+            OffsetDateTime.now(),
+            null,
+            null,
+            OffsetDateTime.now().plusDays(3),
+            totalAmount,
+            InvoiceStatus.UNPAID,
+            null,
+            items,
+            payer,
+            null
+        );
+    }
+
     public Set<LineItem> getItems() {
         return Collections.unmodifiableSet(items);
     }
@@ -54,8 +80,9 @@ public class Invoice {
     public void assignPaymentGatewayCode(String code) {
     }
 
-    public void changePaymentSettings(PaymentMethod method, UUID creditCard) {
+    public void changePaymentSettings(PaymentMethod method, UUID creditCardId) {
+        PaymentSettings paymentSettings = PaymentSettings.brandNew(method, creditCardId);
+        this.setPaymentSettings(paymentSettings);
     }
-
 
 }
