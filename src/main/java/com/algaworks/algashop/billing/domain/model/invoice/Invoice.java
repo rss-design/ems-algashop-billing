@@ -3,6 +3,13 @@ package com.algaworks.algashop.billing.domain.model.invoice;
 import com.algaworks.algashop.billing.domain.model.DomainException;
 import com.algaworks.algashop.billing.domain.model.IdGenerator;
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import java.util.Collections;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -23,10 +30,13 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Invoice {
 
+    @Id
     @EqualsAndHashCode.Include
     private UUID id;
+
     private String orderId;
     private UUID customerId;
 
@@ -37,8 +47,10 @@ public class Invoice {
 
     private BigDecimal totalAmount;
 
+    @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private PaymentSettings paymentSettings;
 
     private Set<LineItem> items = new HashSet<>();
@@ -56,11 +68,11 @@ public class Invoice {
         Objects.requireNonNull(items);
 
         if (StringUtils.isBlank(orderId)) {
-            throw new DomainException("Order ID cannot be blank");
+            throw new IllegalArgumentException("Order ID cannot be blank");
         }
 
         if (items.isEmpty()) {
-            throw new DomainException("Items cannot be empty");
+            throw new IllegalArgumentException("Items cannot be empty");
         }
 
         BigDecimal totalAmount = items.stream()
@@ -89,7 +101,7 @@ public class Invoice {
     }
 
     public boolean isCanceled() {
-        return InvoiceStatus.CANCELLED.equals(this.getStatus());
+        return InvoiceStatus.CANCELED.equals(this.getStatus());
     }
 
     public boolean isUnPaid() {
@@ -117,7 +129,7 @@ public class Invoice {
         }
         setCancelReason(cancelReason);
         setCanceledAt(OffsetDateTime.now());
-        setStatus(InvoiceStatus.CANCELLED);
+        setStatus(InvoiceStatus.CANCELED);
     }
 
     public void assignPaymentGatewayCode(String code) {
@@ -139,6 +151,7 @@ public class Invoice {
                     this.getId(), this.getStatus().toString().toLowerCase()));
         }
         PaymentSettings paymentSettings = PaymentSettings.brandNew(method, creditCardId);
+        paymentSettings.setInvoice(this);
         this.setPaymentSettings(paymentSettings);
     }
 
