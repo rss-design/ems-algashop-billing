@@ -2,7 +2,9 @@ package com.algaworks.algashop.billing.domain.model.invoice;
 
 import com.algaworks.algashop.billing.domain.model.DomainException;
 import com.algaworks.algashop.billing.domain.model.IdGenerator;
+import io.micrometer.common.util.StringUtils;
 import java.util.Collections;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -45,7 +47,21 @@ public class Invoice {
 
     private String cancelReason;
 
-    public static Invoice issue(String orderId, UUID customerId, Payer payer, Set<LineItem> items) {
+    public static Invoice issue(String orderId,
+                                UUID customerId,
+                                Payer payer,
+                                Set<LineItem> items) {
+        Objects.requireNonNull(customerId);
+        Objects.requireNonNull(payer);
+        Objects.requireNonNull(items);
+
+        if (StringUtils.isBlank(orderId)) {
+            throw new DomainException("Order ID cannot be blank");
+        }
+
+        if (items.isEmpty()) {
+            throw new DomainException("Items cannot be empty");
+        }
 
         BigDecimal totalAmount = items.stream()
             .map(LineItem::getAmount)
@@ -109,6 +125,9 @@ public class Invoice {
             throw new DomainException(
                 String.format("Invoice %s with status %s cannot be edited",
                     this.getId(), this.getStatus().toString().toLowerCase()));
+        }
+        if (this.getPaymentSettings() == null) {
+            throw new DomainException("Invoice has no payment settings");
         }
         this.getPaymentSettings().assignGatewayCode(code);
     }
