@@ -3,8 +3,10 @@ package com.algaworks.algashop.billing.domain.model.invoice;
 import com.algaworks.algashop.billing.domain.model.DomainException;
 import com.algaworks.algashop.billing.domain.model.IdGenerator;
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -21,8 +23,10 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class PaymentSettings {
 
+    @Id
     @EqualsAndHashCode.Include
     private UUID id;
     private UUID creditCardId;
