@@ -1,5 +1,7 @@
 package com.algaworks.algashop.billing;
 
+import java.util.TimeZone;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,7 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BillingApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BillingApplication.class, args);
+      TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+      SpringApplication.run(BillingApplication.class, args);
 	}
 
 }
