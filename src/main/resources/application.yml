@@ -18,3 +18,11 @@ spring:
     password: postgres
     schemas: public
     url: jdbc:postgresql://localhost:5432/billing
+
+algashop:
+  integrations:
+    payment:
+      provider: FASTPAY #FAKE
+      fastpay:
+        hostname: http://localhost:995
+        private-token: SSEewtC6Ps5yJLdB6SJmh1bqJXgRbCdf8ocDj2hU
