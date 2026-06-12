@@ -7,7 +7,7 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
-@HttpExchange(value = "api/c1/credit-cards", accept = "application/json")
+@HttpExchange(value = "api/v1/credit-cards", accept = "application/json")
 public interface FastpayCreditCardApiClient {
 
   @PostExchange(contentType = "application/json")

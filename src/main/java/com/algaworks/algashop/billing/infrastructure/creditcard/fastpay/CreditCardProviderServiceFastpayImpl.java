@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,12 @@ public class CreditCardProviderServiceFastpayImpl implements CreditCardProviderS
 
   @Override
   public Optional<LimitedCreditCard> findById(String gatewayCode) {
-    FastpayCreditCardResponse response = fastpayCreditCardApiClient.findById(gatewayCode);
+    FastpayCreditCardResponse response;
+    try {
+      response = fastpayCreditCardApiClient.findById(gatewayCode);
+    } catch (HttpClientErrorException.NotFound e) {
+      return Optional.empty();
+    }
     return Optional.ofNullable(toLimitedCreditCard(response));
   }
 
