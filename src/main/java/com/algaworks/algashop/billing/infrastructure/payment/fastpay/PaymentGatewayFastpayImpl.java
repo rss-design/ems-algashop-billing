@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @ConditionalOnProperty(name = "algashop.integrations.payment.provider", havingValue = "FASTPAY")
-public class PaymentFastpayImpl implements PaymentGatewayService {
+public class PaymentGatewayFastpayImpl implements PaymentGatewayService {
 
   @Override
   public Payment capture(PaymentRequest request) {
