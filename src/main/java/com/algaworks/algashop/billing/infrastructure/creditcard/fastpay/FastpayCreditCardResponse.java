@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class FastpayCreditCardResponse {
   private String id;
-  private String lastName;
+  private String lastNumbers;
   private Integer expMonth;
   private Integer expYear;
   private String brand;

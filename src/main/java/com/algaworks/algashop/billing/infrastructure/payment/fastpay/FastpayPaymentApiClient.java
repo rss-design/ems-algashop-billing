@@ -2,6 +2,7 @@ package com.algaworks.algashop.billing.infrastructure.payment.fastpay;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
@@ -11,7 +12,7 @@ import org.springframework.web.service.annotation.PutExchange;
 public interface FastpayPaymentApiClient {
 
   @PostExchange(contentType = MediaType.APPLICATION_JSON_VALUE)
-  FastpayPaymentModel capture(FastpayPaymentInput input);
+  FastpayPaymentModel capture(@RequestBody FastpayPaymentInput input);
 
   @GetExchange("/{paymentId}")
   FastpayPaymentModel findById(@PathVariable String paymentId);

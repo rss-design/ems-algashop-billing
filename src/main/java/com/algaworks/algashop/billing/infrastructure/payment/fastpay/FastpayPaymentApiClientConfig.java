@@ -13,7 +13,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 public class FastpayPaymentApiClientConfig {
 
   @Bean
-  public FastpayPaymentApiClientConfig fastpayPaymentApiClient(
+  public FastpayPaymentApiClient fastpayPaymentApiClient(
     RestClient.Builder builder,
     AlgaShopPaymentProperties properties
   ) {
@@ -28,6 +28,6 @@ public class FastpayPaymentApiClientConfig {
     RestClientAdapter adapter = RestClientAdapter.create(restClient);
     HttpServiceProxyFactory proxyFactory = HttpServiceProxyFactory.builderFor(adapter).build();
 
-    return proxyFactory.createClient(FastpayPaymentApiClientConfig.class);
+    return proxyFactory.createClient(FastpayPaymentApiClient.class);
   }
 }

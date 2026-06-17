@@ -7,8 +7,8 @@ public class FastpayEnumConverter {
 
   public static PaymentMethod convert(FastpayPaymentMethod method) {
     return switch (method) {
-      case CREDIT -> PaymentMethod.CREDIT_CARD
-      case GATEWAY_BALANCE -> PaymentMethod.GATEWAY_BALANCE
+      case CREDIT -> PaymentMethod.CREDIT_CARD;
+      case GATEWAY_BALANCE -> PaymentMethod.GATEWAY_BALANCE;
     };
   }
 

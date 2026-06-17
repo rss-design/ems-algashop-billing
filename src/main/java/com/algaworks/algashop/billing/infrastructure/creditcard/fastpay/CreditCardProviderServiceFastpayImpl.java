@@ -49,7 +49,7 @@ public class CreditCardProviderServiceFastpayImpl implements CreditCardProviderS
   private LimitedCreditCard toLimitedCreditCard(FastpayCreditCardResponse response) {
     return LimitedCreditCard.builder()
       .gatewayCode(response.getId())
-      .lastNumbers(response.getLastName())
+      .lastNumbers(response.getLastNumbers())
       .brand(response.getBrand())
       .expMonth(response.getExpMonth())
       .expYear(response.getExpYear())
