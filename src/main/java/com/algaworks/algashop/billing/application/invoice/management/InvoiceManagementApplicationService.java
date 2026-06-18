@@ -35,7 +35,7 @@ public class InvoiceManagementApplicationService {
     @Transactional
     public UUID generate(GenerateInvoiceInput input) {
         PaymentSettingsInput paymentSettings = input.getPaymentSettings();
-        verifyCreditCardId(paymentSettings.getCreditCardId(), input.getCustomerId());
+        verifyCreditCardId(paymentSettings.getCreditCardId());
 
         Payer payer = convertToPayer(input.getPayer());
         Set<LineItem> items = convertToLineItems(input.getItems());
@@ -50,7 +50,8 @@ public class InvoiceManagementApplicationService {
 
     @Transactional
     public void processPayment(UUID invoiceId) {
-        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new InvoiceNotFoundException());
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(
+          InvoiceNotFoundException::new);
         PaymentRequest paymentRequest = toPaymentRequest(invoice);
 
         Payment payment;
@@ -112,8 +113,8 @@ public class InvoiceManagementApplicationService {
             .build();
     }
 
-    private void verifyCreditCardId(UUID creditCardId, UUID customerId) {
-        if (creditCardId != null && customerId!= null && !creditCardRepository.existsByIdAndCustomerId(creditCardId, customerId)) {
+    private void verifyCreditCardId(UUID creditCardId) {
+        if (creditCardId != null && !creditCardRepository.existsById(creditCardId)) {
             throw new CreditCardNotFoundException();
         }
     }

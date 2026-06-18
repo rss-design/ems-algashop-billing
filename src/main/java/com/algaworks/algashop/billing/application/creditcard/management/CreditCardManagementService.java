@@ -1,0 +1,48 @@
+package com.algaworks.algashop.billing.application.creditcard.management;
+
+import com.algaworks.algashop.billing.domain.model.creditcard.CreditCard;
+import com.algaworks.algashop.billing.domain.model.creditcard.CreditCardNotFoundException;
+import com.algaworks.algashop.billing.domain.model.creditcard.CreditCardProviderService;
+import com.algaworks.algashop.billing.domain.model.creditcard.CreditCardRepository;
+import com.algaworks.algashop.billing.domain.model.creditcard.LimitedCreditCard;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class CreditCardManagementService {
+
+  private final CreditCardRepository creditCardRepository;
+  private final CreditCardProviderService creditCardProviderService;
+
+  @Transactional
+  public UUID register(TokenizedCreditCardInput input) {
+    LimitedCreditCard limitedCreditCard =
+      creditCardProviderService.register(input.getCustomerId(), input.getTokenizedCard());
+
+    CreditCard creditCard = CreditCard.brandNew(
+      input.getCustomerId(),
+      limitedCreditCard.getLastNumbers(),
+      limitedCreditCard.getBrand(),
+      limitedCreditCard.getExpMonth(),
+      limitedCreditCard.getExpYear(),
+      limitedCreditCard.getGatewayCode()
+    );
+
+    creditCardRepository.saveAndFlush(creditCard);
+
+    return creditCard.getId();
+  }
+
+  @Transactional
+  void delete(UUID customerId, UUID creditCardId) {
+    CreditCard creditCard = creditCardRepository.findByCustomerIdAndId(customerId, creditCardId)
+        .orElseThrow(CreditCardNotFoundException::new);
+    creditCardRepository.delete(creditCard);
+    creditCardProviderService.delete(creditCard.getGatewayCode());
+  }
+
+}
