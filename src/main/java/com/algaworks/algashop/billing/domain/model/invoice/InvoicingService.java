@@ -16,7 +16,7 @@ public class InvoicingService {
 
     public Invoice issue(String orderId, UUID customerId, Payer payer, Set<LineItem> items) {
         if (invoiceRepository.existsByOrderId(orderId)) {
-            throw new DomainException(String.format("Invoice already exists for ordeer %s",  orderId));
+            throw new DomainException(String.format("Invoice already exists for order %s",  orderId));
         }
         return Invoice.issue(orderId, customerId, payer, items);
     }

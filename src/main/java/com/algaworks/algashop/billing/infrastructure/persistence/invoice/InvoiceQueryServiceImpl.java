@@ -20,8 +20,8 @@ public class InvoiceQueryServiceImpl implements InvoiceQueryService {
 
   @Override
   public InvoiceOutput findByOrderId(String orderId) {
-    Invoice invoice = invoiceRepository.findByOrderId(orderId).orElseThrow(
-      InvoiceNotFoundException::new);
+    Invoice invoice = invoiceRepository.findByOrderId(orderId)
+      .orElseThrow(InvoiceNotFoundException::new);
     return mapper.convert(invoice, InvoiceOutput.class);
   }
 }

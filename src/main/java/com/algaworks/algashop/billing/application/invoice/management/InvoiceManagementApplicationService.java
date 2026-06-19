@@ -13,7 +13,7 @@ import com.algaworks.algashop.billing.domain.model.invoice.payment.Payment;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.PaymentRequest;
 import java.util.LinkedHashSet;
-import java.util.Objects;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -79,7 +79,7 @@ public class InvoiceManagementApplicationService {
             .build();
     }
 
-    private Set<LineItem> convertToLineItems(Set<LineItemInput> itemsInput) {
+    private Set<LineItem> convertToLineItems(List<LineItemInput> itemsInput) {
         Set<LineItem> lineItems = new LinkedHashSet<>();
         int itemNumber = 1;
         for (LineItemInput itemInput : itemsInput) {

@@ -1,5 +1,6 @@
 package com.algaworks.algashop.billing.application.invoice.management;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,5 @@ public class GenerateInvoiceInput{
     private UUID customerId;
     private PaymentSettingsInput paymentSettings;
     private PayerData payer;
-    private Set<LineItemInput> items;
+    private List<LineItemInput> items;
 }
