@@ -8,6 +8,7 @@ import com.algaworks.algashop.billing.domain.model.invoice.Payer;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.Payment;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.PaymentRequest;
+import com.algaworks.algashop.billing.infrastructure.payment.AlgaShopPaymentProperties;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,7 @@ public class PaymentGatewayServiceFastpayImpl implements PaymentGatewayService {
 
   private final FastpayPaymentApiClient fastpayPaymentApiClient;
   private final CreditCardRepository creditCardRepository;
+  private final AlgaShopPaymentProperties algaShopPaymentProperties;
 
   @Override
   public Payment capture(PaymentRequest request) {
@@ -48,7 +50,7 @@ public class PaymentGatewayServiceFastpayImpl implements PaymentGatewayService {
       .zipCode(address.getZipCode())
       .addressLine1(address.getStreet() + ", " + address.getNumber())
       .addressLine2(address.getComplement())
-      .replyToUrl("http://example.com/webhook");
+      .replyToUrl(algaShopPaymentProperties.getFastpay().getWebhookUrl());
 
     switch (request.getMethod()) {
       case CREDIT_CARD -> {

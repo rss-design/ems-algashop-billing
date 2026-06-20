@@ -12,6 +12,7 @@ import com.algaworks.algashop.billing.domain.model.invoice.Payer;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.Payment;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.PaymentRequest;
+import com.algaworks.algashop.billing.domain.model.invoice.payment.PaymentStatus;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -67,6 +68,14 @@ public class InvoiceManagementApplicationService {
 
         invoicingService.assignPayment(invoice, payment);
         invoiceRepository.saveAndFlush(invoice);
+    }
+
+    @Transactional
+    public void updatePaymentStatus(UUID invoiceId, PaymentStatus paymentStatus) {
+      Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(
+        InvoiceNotFoundException::new);
+      invoice.updatePaymentStatus(paymentStatus);
+      invoiceRepository.saveAndFlush(invoice);
     }
 
     private PaymentRequest toPaymentRequest(Invoice invoice) {
