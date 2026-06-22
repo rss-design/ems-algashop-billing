@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +28,16 @@ class PaymentGatewayServiceFastpayImplIT extends AbstractFastpayIT {
 
   @Autowired
   private CreditCardRepository creditCardRepository;
+
+  @BeforeAll
+  public static void beforeAll() {
+    startMock();
+  }
+
+  @AfterAll
+  public static void afterAll() {
+    stopMock();
+  }
 
   @Test
   public void shouldProcessPaymentWithCreditCard() {
