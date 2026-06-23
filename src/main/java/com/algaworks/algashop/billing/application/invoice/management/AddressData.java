@@ -1,5 +1,6 @@
 package com.algaworks.algashop.billing.application.invoice.management;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,11 +11,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AddressData {
-    private String street;
-    private String number;
-    private String complement;
-    private String neighborhood;
-    private String city;
-    private String state;
-    private String zipCode;
+  @NotBlank
+  private String street;
+
+  @NotBlank
+  private String number;
+
+  @NotBlank
+  private String complement;
+
+  @NotBlank
+  private String neighborhood;
+
+  @NotBlank
+  private String city;
+
+  @NotBlank
+  private String state;
+
+  @NotBlank
+  private String zipCode;
 }

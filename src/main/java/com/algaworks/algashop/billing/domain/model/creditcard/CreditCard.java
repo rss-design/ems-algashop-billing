@@ -1,18 +1,19 @@
 package com.algaworks.algashop.billing.domain.model.creditcard;
 
-import com.algaworks.algashop.billing.domain.model.IdGenerator;
+import com.algaworks.algashop.billing.domain.model.invoice.IdGenerator;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @Setter(AccessLevel.PRIVATE)

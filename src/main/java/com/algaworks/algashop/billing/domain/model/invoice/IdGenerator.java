@@ -1,4 +1,4 @@
-package com.algaworks.algashop.billing.domain.model;
+package com.algaworks.algashop.billing.domain.model.invoice;
 
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedEpochRandomGenerator;

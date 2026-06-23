@@ -9,6 +9,7 @@ import com.algaworks.algashop.billing.domain.model.invoice.InvoiceRepository;
 import com.algaworks.algashop.billing.domain.model.invoice.InvoicingService;
 import com.algaworks.algashop.billing.domain.model.invoice.LineItem;
 import com.algaworks.algashop.billing.domain.model.invoice.Payer;
+import com.algaworks.algashop.billing.domain.model.invoice.PaymentMethod;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.Payment;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
 import com.algaworks.algashop.billing.domain.model.invoice.payment.PaymentRequest;
@@ -36,7 +37,9 @@ public class InvoiceManagementApplicationService {
     @Transactional
     public UUID generate(GenerateInvoiceInput input) {
         PaymentSettingsInput paymentSettings = input.getPaymentSettings();
-        verifyCreditCardId(paymentSettings.getCreditCardId());
+        if (paymentSettings.getMethod().equals(PaymentMethod.CREDIT_CARD)) {
+          verifyCreditCard(input);
+        }
 
         Payer payer = convertToPayer(input.getPayer());
         Set<LineItem> items = convertToLineItems(input.getItems());
@@ -48,6 +51,14 @@ public class InvoiceManagementApplicationService {
 
         return invoice.getId();
     }
+
+  private void verifyCreditCard(GenerateInvoiceInput input) {
+    UUID creditCardId = input.getPaymentSettings().getCreditCardId();
+    UUID customerId = input.getCustomerId();
+    if (!creditCardRepository.existsByIdAndCustomerId(creditCardId, customerId)) {
+      throw new CreditCardNotFoundException(String.format("Credit card %s not found exception", creditCardId));
+    }
+  }
 
     @Transactional
     public void processPayment(UUID invoiceId) {
@@ -120,11 +131,5 @@ public class InvoiceManagementApplicationService {
                 .number(addressData.getNumber())
                 .build())
             .build();
-    }
-
-    private void verifyCreditCardId(UUID creditCardId) {
-        if (creditCardId != null && !creditCardRepository.existsById(creditCardId)) {
-            throw new CreditCardNotFoundException();
-        }
     }
 }

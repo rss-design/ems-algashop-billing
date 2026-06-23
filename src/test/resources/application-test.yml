@@ -18,6 +18,12 @@ spring:
     password: postgres
     url: jdbc:postgresql://localhost:5432/billing_test
 
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.orm.jdbc.extract: trace
+
 algashop:
   integrations:
     payment:
