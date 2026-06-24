@@ -99,3 +99,39 @@ tasks.register('integrationTest', Test) {
         excludeTestsMatching "*Test"
     }
 }
+
+bootJar {
+    archiveFileName = 'billing.jar'
+}
+
+tasks.register('dockerBuilderCreate', Exec) {
+    description = 'Creates (if absent) a Buildx builder that supports multi-platform builds'
+    group = 'build'
+    commandLine 'sh', '-c',
+            'docker buildx inspect algashop-billing-builder >/dev/null 2>&1 || ' +
+            'docker buildx create --name algashop-billing-builder --driver docker-container --use'
+}
+
+tasks.register('dockerBuild', Exec) {
+    description = 'Builds a multi-platform Docker image using Buildx'
+    group = 'build'
+    dependsOn('bootJar', 'dockerBuilderCreate')
+    workingDir project.rootDir
+    commandLine 'docker', 'buildx', 'build',
+            '--builder', 'algashop-billing-builder',
+            '--platform', 'linux/arm64/v8,linux/amd64',
+            '--tag', 'algashop/billing:dev',
+            '--push',
+            '.'
+}
+
+tasks.register('dockerBuildLocal', Exec) {
+    description = 'Builds a single-platform Docker image and loads it into the local Docker daemon'
+    group = 'build'
+    dependsOn('bootJar')
+    workingDir project.rootDir
+    commandLine 'docker', 'buildx', 'build',
+            '--tag', 'algashop/billing:dev',
+            '--load',
+            '.'
+}
