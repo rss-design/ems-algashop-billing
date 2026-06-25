@@ -2,7 +2,7 @@ server.port: 8082
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/billing
+    url: jdbc:postgresql://algashop-postgres:5432/billing
     username: postgres
     password: postgres
   jpa:
@@ -12,7 +12,7 @@ spring:
     locations: classpath:db/migration,classpath:db/testdata
     user: postgres
     password: postgres
-    url: jdbc:postgresql://localhost:5432/billing
+    url: jdbc:postgresql://algashop-postgres:5432/billing
 
 algashop:
   integrations:

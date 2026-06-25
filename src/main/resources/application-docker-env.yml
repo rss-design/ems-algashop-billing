@@ -13,4 +13,4 @@ algashop:
   integrations:
     payment:
       fastpay:
-        hostname: http://fastpay:9995
+        webhook-url: http://algashop-billing:8082/api/v1/webhooks/fastpay
