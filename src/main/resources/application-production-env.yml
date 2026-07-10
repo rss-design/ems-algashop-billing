@@ -1,16 +1,39 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://algashop-postgres:5432/billing
+#  jpa:
+#    show-sql: true
+#  flyway:
+#    locations: classpath:db/migration
+#    user: postgres
+#    password: postgres
+#    url: jdbc:postgresql://algashop-postgres:5432/billing
+#
+#algashop:
+#  integrations:
+#    payment:
+#      fastpay:
+#        hostname: http://fastpay:9995
+
 spring:
   datasource:
-    url: jdbc:postgresql://algashop-postgres:5432/billing
+    url: ${DATASOURCE_JDBC_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
   jpa:
     show-sql: true
   flyway:
+    enabled: false
     locations: classpath:db/migration
-    user: postgres
-    password: postgres
-    url: jdbc:postgresql://algashop-postgres:5432/billing
+    user: ${FLYWAY_USERNAME}
+    password: ${FLYWAY_PASSWORD}
+    url: ${DATASOURCE_JDBC_URL}
 
 algashop:
   integrations:
     payment:
+      provider: FASTPAY
       fastpay:
-        hostname: http://fastpay:9995
+        hostname: ${FASTPAY_HOSTNAME}
+        private-token: ${FASTPAY_PRIVATE_TOKEN}
+        webhook-url: ${FASTPAY_WEBHOOK_URL}
